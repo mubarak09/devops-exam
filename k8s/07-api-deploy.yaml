@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rust-api
+  template:
+    metadata:
+      labels:
+        app: rust-api
+    spec:
+      containers:
+        - name: rust-api
+          image: public.ecr.aws/f6d8s8v7/rust-webapi:1.0-amd64
+          ports:
+            - containerPort: 9000
+          env:
+            - name: MONGODB_URI
+              value: mongodb://admin:secret@mongo:27017/solar_system_info?authSource=admin
+            - name: REDIS_URI
+              value: redis://redis
+            - name: ENABLE_WRITING_HANDLERS
+              value: "false"
+            - name: RUST_LOG
+              value: debug
